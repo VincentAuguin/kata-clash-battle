@@ -1,12 +1,11 @@
-package fr.vauguin.clashbattle
+package fr.vauguin.clashbattle.elixir
 
-import io.mockk.junit5.MockKExtension
+import fr.vauguin.clashbattle.elixir.DefaultElixirProducer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import java.time.Duration
 
 @ExperimentalCoroutinesApi
@@ -49,7 +48,8 @@ internal class DefaultElixirProducerTest {
     @Test
     fun `Producer should produce elixirs with the defined cycle duration`() = runBlockingTest {
         var producedQuantity = 0
-        producer = DefaultElixirProducer(cycleDuration = Duration.ofMillis(250))
+        producer =
+            DefaultElixirProducer(cycleDuration = Duration.ofMillis(250))
         producer.startProducing { producedQuantity += it }
         advanceTimeBy(1_000)
         producer.stopProducing("End of test")

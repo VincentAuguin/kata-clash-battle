@@ -1,10 +1,11 @@
-package fr.vauguin.clashbattle
+package fr.vauguin.clashbattle.elixir
 
 interface ElixirDisplay {
     fun update(elixirs: Int)
 }
 
-class ConsoleElixirDisplay(private val maximumElixirs: Int): ElixirDisplay {
+class ConsoleElixirDisplay(private val maximumElixirs: Int):
+    ElixirDisplay {
 
     override fun update(elixirs: Int) {
         val bar = StringBuilder()

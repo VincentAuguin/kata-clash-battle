@@ -1,11 +1,10 @@
 package fr.vauguin.clashbattle
 
-import io.mockk.junit5.MockKExtension
+import fr.vauguin.clashbattle.card.Card
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
 internal class GameTest {
@@ -35,5 +34,24 @@ internal class GameTest {
         assertEquals(10, game.elixirs)
         game.elixirs = Int.MAX_VALUE
         assertEquals(10, game.elixirs)
+    }
+
+    @Test
+    fun `Game should allow to put a card if elixirs is enough`() {
+        val card = Card("Magus", 3)
+        assertTrue(game.putCard(card))
+    }
+
+    @Test
+    fun `Game should not allow to put a card if elixirs is not enough`() {
+        val card = Card("Magus", 6)
+        assertFalse(game.putCard(card))
+    }
+
+    @Test
+    fun `Game should substract the cost of the put card from elixirs`() {
+        val card = Card("Magus", 3)
+        game.putCard(card)
+        assertEquals(2, game.elixirs)
     }
 }

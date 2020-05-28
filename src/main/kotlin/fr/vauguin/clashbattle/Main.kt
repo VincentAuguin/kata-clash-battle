@@ -12,7 +12,7 @@ class Main {
             val game = Game()
             runBlocking {
                 game.startProducingElixirs()
-                delay(12_000)
+                delay(3_000)
                 game.stopProducingElixirs()
             }
         }

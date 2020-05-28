@@ -1,4 +1,4 @@
-package fr.vauguin.clashbattle
+package fr.vauguin.clashbattle.elixir
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ProducerScope
