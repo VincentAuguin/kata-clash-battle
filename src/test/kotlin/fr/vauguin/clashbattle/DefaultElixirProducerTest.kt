@@ -10,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import java.time.Duration
 
 @ExperimentalCoroutinesApi
-@ExtendWith(MockKExtension::class)
 internal class DefaultElixirProducerTest {
     lateinit var producer: DefaultElixirProducer
 
@@ -38,7 +37,7 @@ internal class DefaultElixirProducerTest {
     }
 
     @Test
-    fun `producer should produce the defined amount of elixirs per cycle`() = runBlockingTest {
+    fun `Producer should produce the defined amount of elixirs per cycle`() = runBlockingTest {
         var producedQuantity = 0
         producer = DefaultElixirProducer(elixirsProducedByCycle = 3)
         producer.startProducing { producedQuantity += it }
@@ -48,7 +47,7 @@ internal class DefaultElixirProducerTest {
     }
 
     @Test
-    fun `producer should produce elixirs with the defined cycle duration`() = runBlockingTest {
+    fun `Producer should produce elixirs with the defined cycle duration`() = runBlockingTest {
         var producedQuantity = 0
         producer = DefaultElixirProducer(cycleDuration = Duration.ofMillis(250))
         producer.startProducing { producedQuantity += it }

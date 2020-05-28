@@ -3,11 +3,15 @@ package fr.vauguin.clashbattle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
-class Game {
+class Game() {
+
     var elixirs = INITIAL_ELIXIRS
         set(value) {
             field = value.coerceAtLeast(MINIMUM_ELIXIRS).coerceAtMost(MAXIMUM_ELIXIRS)
+            elixirDisplay.update(field)
         }
+
+    private val elixirDisplay = ConsoleElixirDisplay(MAXIMUM_ELIXIRS).also { it.update(elixirs) }
 
     private var elixirProducer: ElixirProducer = DefaultElixirProducer()
 
