@@ -1,10 +1,6 @@
 package fr.vauguin.clashbattle
 
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.ProducerScope
-import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.channels.produce
-import kotlin.coroutines.coroutineContext
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 class Game {
@@ -13,38 +9,22 @@ class Game {
             field = value.coerceAtLeast(MINIMUM_ELIXIRS).coerceAtMost(MAXIMUM_ELIXIRS)
         }
 
-    private var elixirsProduction: ReceiveChannel<Int>? = null
+    private var elixirProducer: ElixirProducer = DefaultElixirProducer()
 
-    suspend fun startProducingElixirs() {
-        if (elixirsProduction != null)
-            return
-
-        CoroutineScope(coroutineContext).run {
-            produce<Int> { produceElixirs() }.also { channel ->
-                elixirsProduction = channel
-                storeElixirs(channel)
-            }
-        }
+    fun setElixirProducer(producer: ElixirProducer) {
+        elixirProducer.stopProducing("Change elixirs producer")
+        elixirProducer = producer
     }
 
-    private suspend fun ProducerScope<Int>.produceElixirs() {
-        while (isActive) {
-            delay(INITIAL_ELIXIRS_CYCLE_MILLIS)
-            send(ELIXIRS_PRODUCED_PER_CYCLE)
-        }
-        close()
+    suspend fun startProducingElixirs() = elixirProducer.startProducing { quantity ->
+        elixirs += quantity
     }
 
-    private suspend fun CoroutineScope.storeElixirs(channel: ReceiveChannel<Int>) = launch {
-        for (quantity in channel)
-            elixirs += quantity
-    }
+    fun stopProducingElixirs() = elixirProducer.stopProducing("Game has explicitly ask to stop production")
 
     companion object {
         private const val MINIMUM_ELIXIRS = 0
         private const val MAXIMUM_ELIXIRS = 10
         private const val INITIAL_ELIXIRS = 5
-        private const val INITIAL_ELIXIRS_CYCLE_MILLIS = 1_000L
-        private const val ELIXIRS_PRODUCED_PER_CYCLE = 1
     }
 }
