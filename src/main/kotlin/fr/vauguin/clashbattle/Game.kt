@@ -10,7 +10,14 @@ import fr.vauguin.clashbattle.elixir.ElixirProducer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
-class Game(cards: Set<Card> = emptySet()) {
+class Game(cards: Set<Card>) {
+    init {
+        cards.count().let { count ->
+            if (count != DESIRED_CARDS_COUNT)
+                throw NotInitializedWithDesiredCardsCount(DESIRED_CARDS_COUNT, count)
+        }
+    }
+
     var elixirs = INITIAL_ELIXIRS
         set(value) {
             field = value.coerceAtLeast(MINIMUM_ELIXIRS).coerceAtMost(MAXIMUM_ELIXIRS)
@@ -77,5 +84,9 @@ class Game(cards: Set<Card> = emptySet()) {
         private const val MINIMUM_ELIXIRS = 0
         private const val MAXIMUM_ELIXIRS = 10
         private const val INITIAL_ELIXIRS = 5
+        private const val DESIRED_CARDS_COUNT = 8
     }
 }
+
+class NotInitializedWithDesiredCardsCount(desiredCount: Int, actualCount: Int) :
+    Exception("Unable to instantiate the game because it expects $desiredCount cards and $actualCount was/were provided")

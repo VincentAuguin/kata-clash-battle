@@ -9,7 +9,7 @@ interface Deck {
     fun getLastDiscarded(): Card?
 }
 
-class DefaultDeck(content: Collection<Card> = emptyList()) : Deck {
+class DefaultDeck(content: Set<Card>) : Deck {
 
     private val queue: Queue<Card> = LinkedList(content)
 

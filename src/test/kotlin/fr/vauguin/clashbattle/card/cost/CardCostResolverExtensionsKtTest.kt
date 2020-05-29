@@ -9,14 +9,14 @@ internal class CardCostResolverExtensionsKtTest {
 
     @Test
     fun `Resolver on previous cost should resolve if the last discarded card has a FixedCostPolicy`() {
-        val deck = DefaultDeck()
+        val deck = DefaultDeck(emptySet())
         deck.discard(CardMagus)
         assertEquals(3, CardMirror.resolveCostOnLastDiscardedCardCost(deck) { 3 })
     }
 
     @Test
     fun `Resolver on previous cost should throw if the last discarded card has a VariableCostPolicy`() {
-        val deck = DefaultDeck()
+        val deck = DefaultDeck(emptySet())
         deck.discard(CardMirror)
         assertThrows(VariableCostBasedOnVariableCostCalculationNotSupported::class.java) {
             CardMirror.resolveCostOnLastDiscardedCardCost(deck) { 0 }
@@ -25,7 +25,7 @@ internal class CardCostResolverExtensionsKtTest {
 
     @Test
     fun `Resolver on previous cost should throw if there is no discarded card`() {
-        val deck = DefaultDeck()
+        val deck = DefaultDeck(emptySet())
         assertThrows(NoDiscardedCardForCalculation::class.java) {
             CardMirror.resolveCostOnLastDiscardedCardCost(deck) { 0 }
         }
@@ -33,7 +33,7 @@ internal class CardCostResolverExtensionsKtTest {
 
     @Test
     fun `Resolver on previous cost should throw if the cost policy is not variable`() {
-        val deck = DefaultDeck()
+        val deck = DefaultDeck(emptySet())
         assertThrows(CardCostCalculationException::class.java) {
             CardMagus.resolveCostOnLastDiscardedCardCost(deck) { 0 }
         }

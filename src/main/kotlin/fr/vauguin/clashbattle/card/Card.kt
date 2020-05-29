@@ -14,6 +14,8 @@ object CardMagus : Card("Magus", FixedCostPolicy(3))
 object CardBabyDragon : Card("Baby Dragon", FixedCostPolicy(4))
 object CardGiantSkeleton : Card("Giant Skeleton", FixedCostPolicy(6))
 object CardZapper : Card("Zapper", FixedCostPolicy(2))
+object CardValkyrie : Card("Valkyrie", FixedCostPolicy(5))
+object CardPrince : Card("Prince", FixedCostPolicy(5))
 object CardMirror : Card("Mirror", VariableCostPolicy { other ->
     when (val policy = other.costPolicy) {
         is FixedCostPolicy -> policy.cost + 1

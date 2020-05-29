@@ -22,7 +22,18 @@ internal class GameTest {
 
     @BeforeEach
     fun setUp() {
-        game = Game(setOf(CardMagus, CardGiantSkeleton, CardMirror, CardBabyDragon, CardZapper))
+        game = Game(
+            setOf(
+                CardMagus,
+                CardGiantSkeleton,
+                CardMirror,
+                CardBabyDragon,
+                CardZapper,
+                CardPrince,
+                CardValkyrie,
+                CardMusketeer
+            )
+        )
     }
 
     @Test
@@ -107,13 +118,6 @@ internal class GameTest {
     }
 
     @Test
-    fun `Game should throw if there is no card is no card in the deck when drawing`() {
-        assertThrows<DeckIsEmpty> {
-            game = Game()
-        }
-    }
-
-    @Test
     fun `Game should discard the put card from the hand to the deck`() {
         val card = game.getHandCards().elementAt(0)
         game.tryToPutCard(card)
@@ -127,14 +131,12 @@ internal class GameTest {
     }
 
     @Test
-    fun `Game should not allow to put a card if the deck is empty`() {
-        game = Game(setOf(CardMagus, CardMirror, CardZapper, CardBabyDragon))
-        assertFalse(game.tryToPutCard(CardMagus))
+    fun `Game should not allow to put card if the card is not in the hand`() {
+        assertFalse(game.tryToPutCard(CardMusketeer))
     }
 
     @Test
-    fun `Game should not allow to put card if the card is not in the hand`() {
-        game = Game(setOf(CardMagus, CardMirror, CardZapper, CardBabyDragon, CardGiantSkeleton))
-        assertFalse(game.tryToPutCard(CardGiantSkeleton))
+    fun `Game should throw if there is not a total of 8 cards to create the deck`() {
+        assertThrows<NotInitializedWithDesiredCardsCount> { Game(emptySet()) }
     }
 }

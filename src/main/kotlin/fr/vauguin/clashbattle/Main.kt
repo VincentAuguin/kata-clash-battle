@@ -11,7 +11,18 @@ class Main {
         @JvmStatic
         fun main(args: Array<String>) {
             println("👑 Starting the battle !")
-            val game = Game(setOf(CardGiantSkeleton, CardMagus, CardMirror, CardBabyDragon, CardMusketeer))
+            val game = Game(
+                setOf(
+                    CardGiantSkeleton,
+                    CardMagus,
+                    CardMirror,
+                    CardBabyDragon,
+                    CardMusketeer,
+                    CardValkyrie,
+                    CardZapper,
+                    CardPrince
+                )
+            )
             runBlocking {
                 game.startProducingElixirs()
                 delay(4_000)
