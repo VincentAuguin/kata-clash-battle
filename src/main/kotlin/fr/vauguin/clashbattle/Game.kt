@@ -1,6 +1,9 @@
 package fr.vauguin.clashbattle
 
-import fr.vauguin.clashbattle.card.Card
+import fr.vauguin.clashbattle.card.*
+import fr.vauguin.clashbattle.card.cost.FixedCostPolicy
+import fr.vauguin.clashbattle.card.cost.VariableCostPolicy
+import fr.vauguin.clashbattle.card.cost.resolveCostOnLastDiscardedCardCost
 import fr.vauguin.clashbattle.elixir.ConsoleElixirDisplay
 import fr.vauguin.clashbattle.elixir.DefaultElixirProducer
 import fr.vauguin.clashbattle.elixir.ElixirProducer
@@ -15,10 +18,11 @@ class Game {
             elixirDisplay.update(field)
         }
 
+    private val deck = DefaultDeck()
+
     private val elixirDisplay = ConsoleElixirDisplay(MAXIMUM_ELIXIRS).also { it.update(elixirs) }
 
-    private var elixirProducer: ElixirProducer =
-        DefaultElixirProducer()
+    private var elixirProducer: ElixirProducer = DefaultElixirProducer()
 
     fun setElixirProducer(producer: ElixirProducer) {
         elixirProducer.stopProducing("Change elixirs producer")
@@ -29,12 +33,20 @@ class Game {
 
     fun stopProducingElixirs() = elixirProducer.stopProducing("Game has explicitly ask to stop production")
 
-    fun putCard(card: Card): Boolean {
-        val canPut = (elixirs - card.elixirCost) >= 0
-        if (canPut)
-            elixirs -= card.elixirCost
+    fun tryToPutCard(card: Card) = try {
+        val cost = when(val policy = card.costPolicy) {
+            is FixedCostPolicy -> policy.cost
+            is VariableCostPolicy -> card.resolveCostOnLastDiscardedCardCost(deck, policy.compute)
+        }
+        ((elixirs - cost) >= 0).also { canPut -> if (canPut) putCard(card, cost) }
+    } catch (e: CardCostCalculationException) {
+        false
+    }
 
-        return canPut
+    private fun putCard(card: Card, cost: Int) {
+        elixirs -= cost
+        deck.discard(card)
+        println("💢 Putting card '$card' on the field for $cost elixir(s) !")
     }
 
     companion object {

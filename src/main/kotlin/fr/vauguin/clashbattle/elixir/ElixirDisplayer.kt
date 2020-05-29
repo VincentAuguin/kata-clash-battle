@@ -13,6 +13,6 @@ class ConsoleElixirDisplay(private val maximumElixirs: Int):
             val char = if (i <= elixirs) "=" else " "
             bar.append(char)
         }
-        print("Elixirs : ${elixirs.coerceAtLeast(0).coerceAtMost(maximumElixirs)}/$maximumElixirs [$bar]\r")
+        print("🧬 Elixirs : ${elixirs.coerceAtLeast(0).coerceAtMost(maximumElixirs)}/$maximumElixirs [$bar]\r")
     }
 }

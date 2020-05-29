@@ -1,7 +1,11 @@
 package fr.vauguin.clashbattle.elixir
 
 import fr.vauguin.clashbattle.elixir.DefaultElixirProducer
+import io.mockk.spyk
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
