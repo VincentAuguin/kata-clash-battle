@@ -10,15 +10,20 @@ import fr.vauguin.clashbattle.elixir.ElixirProducer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
-class Game {
-
+class Game(cards: Set<Card> = emptySet()) {
     var elixirs = INITIAL_ELIXIRS
         set(value) {
             field = value.coerceAtLeast(MINIMUM_ELIXIRS).coerceAtMost(MAXIMUM_ELIXIRS)
             elixirDisplay.update(field)
         }
 
-    private val deck = DefaultDeck()
+    private val deck = DefaultDeck(cards)
+    private val hand = mutableSetOf<Card>().apply {
+        for (i in 1..4) drawCard(deck, this)
+        println("🃏 Your hand is $this")
+    }
+
+    fun getHandCards() = hand.toSet()
 
     private val elixirDisplay = ConsoleElixirDisplay(MAXIMUM_ELIXIRS).also { it.update(elixirs) }
 
@@ -34,19 +39,38 @@ class Game {
     fun stopProducingElixirs() = elixirProducer.stopProducing("Game has explicitly ask to stop production")
 
     fun tryToPutCard(card: Card) = try {
-        val cost = when(val policy = card.costPolicy) {
+        val cost = when (val policy = card.costPolicy) {
             is FixedCostPolicy -> policy.cost
             is VariableCostPolicy -> card.resolveCostOnLastDiscardedCardCost(deck, policy.compute)
         }
-        ((elixirs - cost) >= 0).also { canPut -> if (canPut) putCard(card, cost) }
+        putCard(card, cost)
     } catch (e: CardCostCalculationException) {
+        false
+    } catch (e: DeckIsEmpty) {
         false
     }
 
-    private fun putCard(card: Card, cost: Int) {
-        elixirs -= cost
+    private fun putCard(card: Card, cost: Int): Boolean {
+        if ((elixirs - cost) < 0)
+            return false
+
+        val removedFromHand = hand.remove(card)
+        if (!removedFromHand)
+            return false
+
+        drawCard(deck, hand)
         deck.discard(card)
+        elixirs -= cost
         println("💢 Putting card '$card' on the field for $cost elixir(s) !")
+        println("🃏 Your hand is now $hand")
+        return true
+    }
+
+    private fun drawCard(from: Deck, to: MutableSet<Card>) {
+        when (val card = from.draw()) {
+            null -> throw DeckIsEmpty()
+            else -> to.add(card)
+        }
     }
 
     companion object {

@@ -4,6 +4,7 @@ import java.util.*
 
 interface Deck {
     fun count(): Int
+    fun draw(): Card?
     fun discard(card: Card)
     fun getLastDiscarded(): Card?
 }
@@ -14,6 +15,8 @@ class DefaultDeck(content: Collection<Card> = emptyList()) : Deck {
 
     private var hasDiscardedOnce = false
 
+    override fun draw(): Card? = queue.poll()
+
     override fun discard(card: Card) {
         queue.offer(card)
         hasDiscardedOnce = true
@@ -23,3 +26,5 @@ class DefaultDeck(content: Collection<Card> = emptyList()) : Deck {
 
     override fun count(): Int = queue.count()
 }
+
+class DeckIsEmpty : Exception("Unable to draw a card because the deck is empty")

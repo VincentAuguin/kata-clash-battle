@@ -43,12 +43,13 @@ class DefaultElixirProducer constructor(
         close()
     }
 
-    private suspend fun consumeProduction(channel: ReceiveChannel<Int>, onReceived: (elixirs: Int) -> Unit) = coroutineScope {
-        launch {
-            for (quantity in channel)
-                onReceived(quantity)
+    private suspend fun consumeProduction(channel: ReceiveChannel<Int>, onReceived: (elixirs: Int) -> Unit) =
+        coroutineScope {
+            launch {
+                for (quantity in channel)
+                    onReceived(quantity)
+            }
         }
-    }
 
     companion object {
         const val DEFAULT_ELIXIRS_PRODUCED_BY_CYCLE = 1

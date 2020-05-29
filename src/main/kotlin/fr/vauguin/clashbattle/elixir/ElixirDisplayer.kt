@@ -4,7 +4,7 @@ interface ElixirDisplay {
     fun update(elixirs: Int)
 }
 
-class ConsoleElixirDisplay(private val maximumElixirs: Int):
+class ConsoleElixirDisplay(private val maximumElixirs: Int) :
     ElixirDisplay {
 
     override fun update(elixirs: Int) {

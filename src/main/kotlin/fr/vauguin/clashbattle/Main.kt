@@ -1,8 +1,6 @@
 package fr.vauguin.clashbattle
 
-import fr.vauguin.clashbattle.card.CardGiantSkeleton
-import fr.vauguin.clashbattle.card.CardMagus
-import fr.vauguin.clashbattle.card.CardMirror
+import fr.vauguin.clashbattle.card.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -12,9 +10,9 @@ class Main {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val game = Game()
+            println("👑 Starting the battle !")
+            val game = Game(setOf(CardGiantSkeleton, CardMagus, CardMirror, CardBabyDragon, CardMusketeer))
             runBlocking {
-                println("👑 Starting the battle !")
                 game.startProducingElixirs()
                 delay(4_000)
                 game.tryToPutCard(CardGiantSkeleton)
@@ -24,8 +22,8 @@ class Main {
                 game.tryToPutCard(CardMirror)
                 delay(1_000)
                 game.stopProducingElixirs()
-                println("🏳 Battle is finish !️")
             }
+            println("🏳 Battle is finish !️")
         }
     }
 }
